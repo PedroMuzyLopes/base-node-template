@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node-dev --files src/server.ts"
+    "build": "npx tsc",
+    "start": "node dist/server.js",
+    "dev": "ts-node-dev --files src/server.ts",
+    "migrate": "npx prisma migrate dev"
   },
   "repository": {
     "type": "git",
@@ -19,6 +21,7 @@
   },
   "homepage": "https://github.com/PedroMuzyLopes/base-node-template#readme",
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.3",
     "@types/cors": "^2.8.13",
     "@types/dotenv": "^8.2.0",
@@ -31,6 +34,7 @@
   },
   "dependencies": {
     "@prisma/client": "^4.7.1",
+    "bcrypt": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
