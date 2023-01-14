@@ -1,7 +1,5 @@
 import express from "express";
 
-import { AuthMiddleware } from "./Middlewares/AuthMiddleware";
-
 import { ReturnAPI } from "./Resources/ReturnApi";
 import { authRoutes } from "./Routes/AuthRoutes";
 import { userRoutes } from "./Routes/UserRoutes";
