@@ -1,12 +1,7 @@
-import { PrismaClient } from "@prisma/client";
-
 import { Request, Response } from "express";
 import { UserRepository } from "../Repositories/UserRepository";
-import { UserInterface } from "../Models/UserModel";
 import { ReturnAPI } from "../Resources/ReturnApi";
 import { LoginService } from "../Services/Auth/LoginService";
-
-const prisma = new PrismaClient();
 
 export interface LoginDataInterface {
   email: string;

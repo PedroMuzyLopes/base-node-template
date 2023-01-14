@@ -13,6 +13,6 @@ export const UserVisibleData = {
   email: true,
   name: true,
   deleted: true,
-  createdAt: true,
-  updatedAt: true,
+  created_at: true,
+  updated_at: true,
 };
