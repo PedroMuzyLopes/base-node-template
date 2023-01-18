@@ -1,47 +1,51 @@
 import bcrypt from "bcrypt";
-import jwt, { Secret } from "jsonwebtoken";
 import { LoginDataInterface } from "../../Controllers/AuthController";
 import { UserInterface } from "../../Models/UserModel";
-import { MessageReturnInterface } from "../../Resources/ReturnApi";
+import {
+  MessageReturnInterface,
+  ErrorInterface,
+  ReturnAPI,
+  SuccessInterface,
+} from "../../Resources/ReturnApi";
+import { RefreshTokenService } from "./RefreshTokenService";
+import { RefreshTokenRepository } from "../../Repositories/RefreshTokenRepository";
 
 export class LoginService {
   public static async execute(
     loginData: LoginDataInterface,
     userData: UserInterface
   ) {
-    const jwt_secret = process.env.JWT_SECRET;
+    try {
+      const checkPassword = await bcrypt.compare(
+        loginData.password,
+        userData.password
+      );
 
-    const checkPassword = await bcrypt.compare(
-      loginData.password,
-      userData.password
-    );
+      if (!checkPassword) {
+        return {
+          message: "Senha invalida",
+          developerMessage: "invalid password",
+          statusHTTP: 424,
+        } as ErrorInterface;
+      }
 
-    if (!checkPassword) {
+      const refresh_token = await RefreshTokenRepository.store(userData.id);
+      const access_token = await RefreshTokenService.execute(refresh_token.id);
+
       return {
-        error: true,
-        message: "Senha invalida",
-        developerMessage: "invalid password",
-        exeception: null,
-        data: null,
-        statusHTTP: 400,
-      } as MessageReturnInterface;
+        message: "Login realizado com sucesso!",
+        data: {
+          access_token: access_token,
+          refresh_token: refresh_token.id,
+        },
+        statusHTTP: 200,
+      } as SuccessInterface;
+    } catch (error) {
+      return {
+        message: "Erro ao logar",
+        exeception: error,
+        statusHTTP: 500,
+      } as ErrorInterface;
     }
-
-    const jwt_data = {
-      id: userData.id,
-      name: userData.name,
-      email: userData.email,
-    };
-
-    const jwt_token = jwt.sign(jwt_data, jwt_secret as Secret);
-
-    return {
-      error: false,
-      message: "Login realizado com sucesso",
-      developerMessage: "login successs",
-      exeception: null,
-      data: { token: jwt_token, user: jwt_data },
-      statusHTTP: 200,
-    } as MessageReturnInterface;
   }
 }

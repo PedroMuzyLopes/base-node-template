@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import { prismaClient as prisma } from "../Database/prismaClient";
 import bcrypt from "bcrypt";
 import { UserInterface, UserVisibleData } from "../Models/UserModel";
-
-const prisma = new PrismaClient();
 
 export class UserRepository {
   public static async find(user_id: string) {
