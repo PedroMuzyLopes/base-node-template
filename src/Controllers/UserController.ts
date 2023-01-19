@@ -31,11 +31,17 @@ export class UserController {
 
     const user = await UserRepository.find(userId);
 
-    return ReturnAPI.success(response, {
-      message: "Usuário encontrado",
-      data: user,
-      statusHTTP: 200,
-    });
+    if (user)
+      return ReturnAPI.success(response, {
+        message: "Usuário encontrado",
+        data: user,
+        statusHTTP: 200,
+      });
+    else
+      return ReturnAPI.error(response, {
+        message: "Usuário não encontrado",
+        statusHTTP: 400,
+      });
   }
 
   public static async findAll(request: Request, response: Response) {

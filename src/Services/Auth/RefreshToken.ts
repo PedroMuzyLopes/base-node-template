@@ -1,16 +1,14 @@
 import dayjs from "dayjs";
 import { RefreshTokenRepository } from "../../Repositories/RefreshTokenRepository";
-import { AccessTokenService } from "./AccessTokenService";
+import { AccessToken } from "./AccessToken";
 
-export class RefreshTokenService {
+export class RefreshToken {
   public static async execute(refresh_token: string) {
     let refreshToken = await RefreshTokenRepository.find(refresh_token);
 
-    if (!refreshToken) {
-      throw new Error("Refresh token invalid");
-    }
+    if (!refreshToken) throw new Error("Refresh token invalid");
 
-    const access_token = await AccessTokenService.execute(refreshToken.user_id);
+    const access_token = await AccessToken.execute(refreshToken.user_id);
 
     return access_token;
   }
@@ -20,7 +18,7 @@ export class RefreshTokenService {
 
     if (!refreshToken) throw new Error("Refresh token invalid");
 
-    const access_token = await AccessTokenService.execute(refreshToken.user_id);
+    const access_token = await AccessToken.execute(refreshToken.user_id);
 
     const expiredRefreshToken = dayjs().isAfter(
       dayjs.unix(refreshToken.expires_in)
@@ -33,6 +31,6 @@ export class RefreshTokenService {
       return { access_token, refresh_token: newRefreshToken.id };
     }
 
-    return { access_token };
+    return { access_token, refresh_token };
   }
 }

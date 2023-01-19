@@ -1,13 +1,8 @@
 import bcrypt from "bcrypt";
 import { LoginDataInterface } from "../../Controllers/AuthController";
 import { UserInterface } from "../../Models/UserModel";
-import {
-  MessageReturnInterface,
-  ErrorInterface,
-  ReturnAPI,
-  SuccessInterface,
-} from "../../Resources/ReturnApi";
-import { RefreshTokenService } from "./RefreshTokenService";
+import { ErrorInterface, SuccessInterface } from "../../Resources/ReturnApi";
+import { RefreshToken } from "./RefreshToken";
 import { RefreshTokenRepository } from "../../Repositories/RefreshTokenRepository";
 
 export class LoginService {
@@ -21,16 +16,15 @@ export class LoginService {
         userData.password
       );
 
-      if (!checkPassword) {
+      if (!checkPassword)
         return {
           message: "Senha invalida",
           developerMessage: "invalid password",
           statusHTTP: 424,
         } as ErrorInterface;
-      }
 
       const refresh_token = await RefreshTokenRepository.store(userData.id);
-      const access_token = await RefreshTokenService.execute(refresh_token.id);
+      const access_token = await RefreshToken.execute(refresh_token.id);
 
       return {
         message: "Login realizado com sucesso!",
